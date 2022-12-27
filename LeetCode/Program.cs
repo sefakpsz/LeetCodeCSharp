@@ -1,7 +1,7 @@
 ﻿while (true)
 {
     var roman = Console.ReadLine().ToUpper();
-    Console.WriteLine(Solution.RomanToInt(roman));
+    Console.WriteLine(Solution.RomanToInteger(roman));
 }
 public static class Solution
 {
@@ -81,20 +81,59 @@ public static class Solution
 
     public static int RomanToInteger(string s)
     {
-        Dictionary<char, int> roman = new();
-        roman.Add('I', 1);
-        roman.Add('V', 5);
-        roman.Add('X', 10);
-        roman.Add('L', 50);
-        roman.Add('C', 100);
-        roman.Add('D', 500);
-        roman.Add('M', 1000);
-
-        for (int i = 0; i < s.Length; i++)
+        Dictionary<char, int> romanChar = new()
         {
+            { 'I', 1 },
+            { 'V', 5 },
+            { 'X', 10 },
+            { 'L', 50 },
+            { 'C', 100 },
+            { 'D', 500 },
+            { 'M', 1000 }
+        };
+
+        Dictionary<int, char> romanInt = new()
+        {
+            { 1, 'I' },
+            { 5, 'V' },
+            { 10, 'X' },
+            { 50, 'L' },
+            { 100, 'C' },
+            { 500, 'D' },
+            { 1000, 'M' }
+        };
+
+        var m = s.IndexOf("M");
+        var c = s.IndexOf("C");
+        var d = s.IndexOf("D");
+        var l = s.IndexOf("L");
+        var x = s.IndexOf("X");
+        var v = s.IndexOf("V");
+        var i = s.IndexOf("I");
+
+        List<int> ints = new()
+        {
+            m,c,d,l,x,v,i
+        };
+        foreach (var item in ints)
+        {
+            if (m > item)
+            {
+                if (s[item] != 'C')
+                {
+                    throw new Exception("Invalid Value!");
+                }
+            }
 
         }
 
-        return 0;
+
+        var sum = 0;
+        for (int i = 0; i < s.Length; i++)
+        {
+            sum += romanChar[s[i]];
+        }
+
+        return sum;
     }
 }
