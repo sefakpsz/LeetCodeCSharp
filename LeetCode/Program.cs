@@ -1,8 +1,10 @@
-﻿while (true)
-{
-    var roman = Console.ReadLine().ToUpper();
-    Console.WriteLine(Solution.RomanToInteger(roman));
-}
+﻿//while (true)
+//{
+//    var roman = Console.ReadLine().ToUpper();
+//    Console.WriteLine(Solution.RomanToInteger(roman));
+//}
+var guid= Guid.NewGuid().ToString("n");
+Console.WriteLine(guid.Length);
 public static class Solution
 {
     public static int RomanToInt(string s)
@@ -81,57 +83,71 @@ public static class Solution
 
     public static int RomanToInteger(string s)
     {
-        Dictionary<char, int> romanChar = new()
+        Dictionary<string, int> romanChar = new()
         {
-            { 'I', 1 },
-            { 'V', 5 },
-            { 'X', 10 },
-            { 'L', 50 },
-            { 'C', 100 },
-            { 'D', 500 },
-            { 'M', 1000 }
+            { "I", 1 },
+            { "IV", 4 },
+            { "V", 5 },
+            { "X", 10 },
+            { "IX", 9 },
+            { "L", 50 },
+            { "XL", 40 },
+            { "C", 100 },
+            { "XC", 90 },
+            { "D", 500 },
+            { "CD", 400 },
+            { "M", 1000 },
+            { "CM", 900 }
         };
 
-        Dictionary<int, char> romanInt = new()
+        Dictionary<int, string> romanInt = new()
         {
-            { 1, 'I' },
-            { 5, 'V' },
-            { 10, 'X' },
-            { 50, 'L' },
-            { 100, 'C' },
-            { 500, 'D' },
-            { 1000, 'M' }
+            { 1   , "I"      },
+            { 4   , "IV"    },
+            {  5  , "V"     },
+            { 10  , "X"     },
+            { 9   , "IX"    },
+            { 50  , "L"     },
+            { 40  , "XL"    },
+            { 100 , "C"     },
+            { 90  , "XC"    },
+            { 500 , "D"     },
+            { 400 , "CD"    },
+            { 1000, "M"      },
+            { 900 , "CM"    }
         };
+        var sum = 0;
 
-        var m = s.IndexOf("M");
-        var c = s.IndexOf("C");
-        var d = s.IndexOf("D");
-        var l = s.IndexOf("L");
-        var x = s.IndexOf("X");
-        var v = s.IndexOf("V");
-        var i = s.IndexOf("I");
-
-        List<int> ints = new()
+        for (int i = s.Length - 1; i > 0; i--)
         {
-            m,c,d,l,x,v,i
-        };
-        foreach (var item in ints)
-        {
-            if (m > item)
+            if (s[i].ToString() == romanInt[1])
             {
-                if (s[item] != 'C')
+                sum += romanChar["I"];
+            }
+            else if (s[i].ToString() == romanInt[5])
+            {
+                if (s[i - 1].ToString() == romanInt[1])
                 {
-                    throw new Exception("Invalid Value!");
+                    sum += romanChar["IV"];
+                    i--;
+                }
+                else
+                {
+                    sum += romanChar["V"];
                 }
             }
-
-        }
-
-
-        var sum = 0;
-        for (int i = 0; i < s.Length; i++)
-        {
-            sum += romanChar[s[i]];
+            else if (s[i].ToString() == romanInt[10])
+            {
+                if (s[i - 1].ToString() == romanInt[1])
+                {
+                    sum += romanChar["IV"];
+                    i--;
+                }
+                else
+                {
+                    sum += romanChar["V"];
+                }
+            }
         }
 
         return sum;
