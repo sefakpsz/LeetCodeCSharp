@@ -3,153 +3,116 @@
 //    var roman = Console.ReadLine().ToUpper();
 //    Console.WriteLine(Solution.RomanToInteger(roman));
 //}
-var guid= Guid.NewGuid().ToString("n");
+var guid = Guid.NewGuid().ToString("n");
 Console.WriteLine(guid.Length);
 public static class Solution
 {
-    public static int RomanToInt(string s)
-    {
-        if (!s.Contains('M'))
-        {
-            if (!s.Contains('D'))
-            {
-                if (!s.Contains('C'))
-                {
-                    if (!s.Contains('X'))
-                    {
-                        if (!s.Contains('V'))
-                        {
-                            if (s.Length > 3)
-                                throw new Exception("Error: Invalid Value Entered!");
+	public static int RomanToInteger(string number)
+	{
+		var sum = 0;
 
-                            return s.Length;
-                        }
-                        if (s.IndexOf('V') != s.LastIndexOf('V'))
-                            throw new Exception("Error: Invalid Value Entered!");
 
-                        if (s.Length > 4)
-                        {
-                            throw new Exception("Error: Invalid Value Entered!");
-                        }
-                        else if (s[0].ToString().ToUpper() != "V")
-                        {
-                            return 4;
-                        }
-                        else if (s.Contains('I'))
-                        {
-                            return s.LastIndexOf("I") + 5;
-                        }
-                        else
-                        {
-                            return 5;
-                        }
-                    }
-                    if (s[2] == 'X')
-                        return 19;
-                    if (s[0] == 'I')
-                    {
-                        if (s.Length > 2)
-                            throw new Exception("Error: Invalid Value Entered!");
+		Dictionary<char, int> roman = new()
+		{
+			{'I',1 },
+			{'V',5 },
+			{'X',10 },
+			{'L',50 },
+			{'C',100 },
+			{'D',500 },
+			{'M',1000 }
+		};
 
-                        return 9;
-                    }
-                    if (s.Contains('V'))
-                    {
-                        if (s.IndexOf('V') != s.LastIndexOf('V'))
-                            throw new Exception("Error: Invalid Value Entered!");
+		switch (number[0])
+		{
+			case 'I':
+				{
+					//rules check
+					if (number[1] == 'I')
+					{
+						sum = number.Length * roman['I'];
+						break;
+					}
+					else if (number[1] == 'V')
+					{
+						sum = 4;
+						break;
+					}
+					else if (number[1] == 'X')
+					{
+						sum = 9;
+						break;
+					}
+					else
+						break;
+				}
+			case 'V':
+				{
+					//rules check
+					sum = roman['V'] + (number.Length - 1);
+					break;
+				}
+			case 'X':
+				{
+					// DIDN'T INCLUDE CASE OF CONTAINS L
 
-                        if (s[1] == 'I')
-                            return 14;
 
-                        if (s.Length > 5)
-                            throw new Exception("Error: Invalid Value Entered!");
+					//rules check
+					if (!number.Contains('V') || !number.Contains('I') || !number.Contains('L'))
+					{
+						sum = number.Length * roman['X'];
+						break;
+					}
+					else if (!number.Contains('I') || !number.Contains('L'))
+					{
+						var numberOfX = number.IndexOf('V');
+						sum = (roman['X'] * numberOfX) + roman['V'];
+						break;
+					}
+					else if (!number.Contains('L'))
+					{
+						var numberOfX = number.IndexOf('V');
 
-                        return 15 + (s.Length - 2);
-                    }
-                    else
-                    {
-                        if (s.Length > 4)
-                            throw new Exception("Error: Invalid Value Entered!");
+						var indexOfI = number.IndexOf('I');
+						var indexOfV = number.IndexOf('V');
+						if (indexOfV < indexOfI)
+						{
+							sum = (roman['X'] * numberOfX) + 4;
+							break;
+						}
+						else
+						{
+							var numberOfI = number.Length - indexOfI;
+							sum = (roman['X'] * numberOfX) + roman['V'] + (numberOfI * roman['I']);
+							break;
+						}
+					}
+					else
+						break;
+				}
+			case 'L':
+				{
+					break;
+				}
+			case 'C':
+				{
+					break;
 
-                        return 10 + (s.Length - 1);
-                    }
-                }
-                return 0;
-            }
-            return 0;
-        }
-        return 0;
-    }
+				}
+			case 'D':
+				{
+					break;
 
-    public static int RomanToInteger(string s)
-    {
-        Dictionary<string, int> romanChar = new()
-        {
-            { "I", 1 },
-            { "IV", 4 },
-            { "V", 5 },
-            { "X", 10 },
-            { "IX", 9 },
-            { "L", 50 },
-            { "XL", 40 },
-            { "C", 100 },
-            { "XC", 90 },
-            { "D", 500 },
-            { "CD", 400 },
-            { "M", 1000 },
-            { "CM", 900 }
-        };
+				}
+			case 'M':
+				{
+					break;
 
-        Dictionary<int, string> romanInt = new()
-        {
-            { 1   , "I"      },
-            { 4   , "IV"    },
-            {  5  , "V"     },
-            { 10  , "X"     },
-            { 9   , "IX"    },
-            { 50  , "L"     },
-            { 40  , "XL"    },
-            { 100 , "C"     },
-            { 90  , "XC"    },
-            { 500 , "D"     },
-            { 400 , "CD"    },
-            { 1000, "M"      },
-            { 900 , "CM"    }
-        };
-        var sum = 0;
+				}
+			default:
+				break;
+		}
 
-        for (int i = s.Length - 1; i > 0; i--)
-        {
-            if (s[i].ToString() == romanInt[1])
-            {
-                sum += romanChar["I"];
-            }
-            else if (s[i].ToString() == romanInt[5])
-            {
-                if (s[i - 1].ToString() == romanInt[1])
-                {
-                    sum += romanChar["IV"];
-                    i--;
-                }
-                else
-                {
-                    sum += romanChar["V"];
-                }
-            }
-            else if (s[i].ToString() == romanInt[10])
-            {
-                if (s[i - 1].ToString() == romanInt[1])
-                {
-                    sum += romanChar["IV"];
-                    i--;
-                }
-                else
-                {
-                    sum += romanChar["V"];
-                }
-            }
-        }
-
-        return sum;
-    }
+		return sum;
+	}
 }
