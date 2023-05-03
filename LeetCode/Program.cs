@@ -5,14 +5,9 @@
 //}
 var guid = Guid.NewGuid().ToString("n");
 Console.WriteLine(guid.Length);
-public static class Solution
+public class Solution
 {
-	public static int RomanToInteger(string number)
-	{
-		var sum = 0;
-
-
-		Dictionary<char, int> roman = new()
+	private Dictionary<char, int> roman = new()
 		{
 			{'I',1 },
 			{'V',5 },
@@ -22,6 +17,9 @@ public static class Solution
 			{'D',500 },
 			{'M',1000 }
 		};
+	public int RomanToInteger(string number)
+	{
+		var sum = 0;
 
 		switch (number[0])
 		{
@@ -34,12 +32,12 @@ public static class Solution
 			case 'V':
 				{
 					//rules check
-					sum = roman['V'] + (number.Length - 1);
+					sum = startWithV(number);
 					break;
 				}
 			case 'X':
 				{
-					// DIDN'T INCLUDE CASE OF CONTAINS L
+					//rules check
 
 					if (number[1] == 'L')
 					{
@@ -50,9 +48,10 @@ public static class Solution
 							sum = startWithI(number);
 						else
 							sum = startWithV(number);
+
+						break;
 					}
-					//rules check
-					if (!number.Contains('V') || !number.Contains('I'))
+					else if (!number.Contains('V') || !number.Contains('I'))
 					{
 						sum = number.Length * roman['X'];
 						break;
@@ -108,7 +107,7 @@ public static class Solution
 		return sum;
 	}
 
-	private static int startWithI(string number)
+	private int startWithI(string number)
 	{
 		if (number[1] == 'I')
 		{
@@ -125,15 +124,8 @@ public static class Solution
 		else
 			return 0;
 	}
-	private static int startWithV(string number)
+	private int startWithV(string number)
 	{
-		var indexOfI = 0;
-		if (number.Contains('I'))
-			indexOfI = number.IndexOf('I');
-
-		if (indexOfI != 0)
-			return 5 + (number.Length - indexOfI);
-		else
-			return 5;
+		return roman['V'] + (number.Length - 1);
 	}
 }
