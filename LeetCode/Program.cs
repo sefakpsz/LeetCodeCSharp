@@ -28,23 +28,8 @@ public static class Solution
 			case 'I':
 				{
 					//rules check
-					if (number[1] == 'I')
-					{
-						sum = number.Length * roman['I'];
-						break;
-					}
-					else if (number[1] == 'V')
-					{
-						sum = 4;
-						break;
-					}
-					else if (number[1] == 'X')
-					{
-						sum = 9;
-						break;
-					}
-					else
-						break;
+					sum = startWithI(number);
+					break;
 				}
 			case 'V':
 				{
@@ -56,20 +41,29 @@ public static class Solution
 				{
 					// DIDN'T INCLUDE CASE OF CONTAINS L
 
+					if (number[1] == 'L')
+					{
+						sum += 40;
+						number = number.Substring(2, 3);
 
+						if (number[0] == 'I')
+							sum = startWithI(number);
+						else
+							sum = startWithV(number);
+					}
 					//rules check
-					if (!number.Contains('V') || !number.Contains('I') || !number.Contains('L'))
+					if (!number.Contains('V') || !number.Contains('I'))
 					{
 						sum = number.Length * roman['X'];
 						break;
 					}
-					else if (!number.Contains('I') || !number.Contains('L'))
+					else if (!number.Contains('I'))
 					{
 						var numberOfX = number.IndexOf('V');
 						sum = (roman['X'] * numberOfX) + roman['V'];
 						break;
 					}
-					else if (!number.Contains('L'))
+					else
 					{
 						var numberOfX = number.IndexOf('V');
 
@@ -87,8 +81,6 @@ public static class Solution
 							break;
 						}
 					}
-					else
-						break;
 				}
 			case 'L':
 				{
@@ -114,5 +106,34 @@ public static class Solution
 		}
 
 		return sum;
+	}
+
+	private static int startWithI(string number)
+	{
+		if (number[1] == 'I')
+		{
+			return number.Length;
+		}
+		else if (number[1] == 'V')
+		{
+			return 4;
+		}
+		else if (number[1] == 'X')
+		{
+			return 9;
+		}
+		else
+			return 0;
+	}
+	private static int startWithV(string number)
+	{
+		var indexOfI = 0;
+		if (number.Contains('I'))
+			indexOfI = number.IndexOf('I');
+
+		if (indexOfI != 0)
+			return 5 + (number.Length - indexOfI);
+		else
+			return 5;
 	}
 }
