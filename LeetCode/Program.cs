@@ -3,9 +3,9 @@
 //    var roman = Console.ReadLine().ToUpper();
 //    Console.WriteLine(Solution.RomanToInteger(roman));
 //}
-var roman = Console.ReadLine();
-roman = roman.Trim().Replace(" ", "").ToUpper();
-Console.WriteLine(new Solution().RomanToInteger(roman));
+var romans = Console.ReadLine();
+var roman = romans.Split(" ");
+Console.WriteLine(new Solution().RomanToInteger(roman[0].Trim().ToUpper()));
 Console.ReadKey();
 
 /*
@@ -193,6 +193,14 @@ public class Solution
 
 			//return sum;
 		}
+		else if (number[1] == 'C')
+		{
+			if (number[2] == 'C')
+				throw new Exception("Roman number of L can't be written 2 times consecutively in this context.");
+
+			sum += 90;
+			number = number[2..];
+		}
 
 
 
@@ -268,7 +276,12 @@ public class Solution
 	}
 	private short startWithC(string number, short sum)
 	{
-		if (number[1] == 'D')
+		if (number[1] == 'M')
+		{
+			sum += 900;
+			number = number[2..];
+		}
+		else if (number[1] == 'D')
 		{
 			sum += 400;
 			number = number[2..];
@@ -314,14 +327,19 @@ public class Solution
 			//	number = number[1..];
 
 			numberOfC = (short)number.LastIndexOf('C');
-			if (numberOfC == 0 || numberOfC == 1)
+			if (numberOfC > 2)
 			{
-				sum += (short)roman['C'];
+				sum += (short)((numberOfC - 1) * roman['M']);
+				number = number[(numberOfC - 1)..];
+			}
+			else if (numberOfC == 0 || numberOfC == 1)
+			{
+				sum += (short)roman['M'];
 				number = number[1..];
 			}
-			else
+			else if(numberOfC == 2)
 			{
-				sum += (short)((numberOfC + 1) * roman['C']);
+				sum += (short)((numberOfC + 1) * roman['M']);
 				number = number[(numberOfC + 1)..];
 			}
 
@@ -359,7 +377,12 @@ public class Solution
 	private short startWithM(string number, short sum)
 	{
 		var indexOfLastM = number.LastIndexOf('M');
-		if (indexOfLastM == 0 || indexOfLastM == 1)
+		if (indexOfLastM > 2)
+		{
+			sum += (short)((indexOfLastM - 1) * roman['M']);
+			number = number[(indexOfLastM - 1)..];
+		}
+		else if (indexOfLastM == 0 || indexOfLastM == 1)
 		{
 			sum += (short)roman['M'];
 			number = number[1..];
