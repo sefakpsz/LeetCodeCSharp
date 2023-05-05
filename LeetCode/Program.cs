@@ -8,6 +8,57 @@ roman = roman.Trim().Replace(" ", "").ToUpper();
 Console.WriteLine(new Solution().RomanToInteger(roman));
 Console.ReadKey();
 
+/*
+ 
+MMMCMXLIV (3944)
+MCMXCV (1995)
+MMMCCCLXXXI (3381)
+CXCIII (193)
+MMMCXXXVII (3137) 
+MMMCCLXXXI (3281)
+MMMCDLXXVI (3476)
+MMMCCXVI (3216)
+MMMDCCXXXVI (3736)
+MLXXIX (1079)
+LXIX (69)
+MCLXX (1170)
+MCDLXXIX (1479)
+DCCLXXV (775)
+DCXLIV (644)
+MMMCCCXVI (3316)
+MMDCCCLXXXVIII (2888)
+DXL (540)
+MCDLXXXIX (1489)
+MCCCXXIV (1324)
+MMDCCXLVIII (2748)
+MMMDCCCLXXIX (3879)
+MMMLIV (3054)
+MMDXLIV (2544)
+MMDLXXV (2575)
+CLXXVIII (178)
+MMMDXCIII (3593)
+CCCLIII (353)
+LIX (59)
+MMCCCXXIV (2324)
+MMMDLIX (3559)
+MMMCMXXV (3925)
+XLIX (49)
+MXLVII (1047)
+MMCCVII (2207)
+MMMDCVIII (3608)
+MMMDCXXXII (3632)
+MMMCLXXXVIII (3188)
+MMCCCXCII (2392)
+MDCXLVIII (1648)
+MCCLVIII (1258)
+MDCCCLXIX (1869)
+MMMDXXVI (3526)
+MMMDXCVI (3596)
+MCCVIII (1208)
+
+ */
+
+
 public class Solution
 {
 	private Dictionary<char, short> roman = new()
@@ -28,43 +79,43 @@ public class Solution
 		{
 			case 'I':
 				{
-					sum += startWithI(number, sum);
+					sum = startWithI(number, sum);
 					break;
 				}
 			case 'V':
 				{
 					//rules check
-					sum += startWithV(number, sum);
+					sum = startWithV(number, sum);
 					break;
 				}
 			case 'X':
 				{
 					//rules check
-					sum += startWithX(number, sum);
+					sum = startWithX(number, sum);
 					break;
 				}
 			case 'L':
 				{
 					//rules check
-					sum += startWithL(number, sum);
+					sum = startWithL(number, sum);
 					break;
 				}
 			case 'C':
 				{
 					//rules check
-					sum += startWithC(number, sum);
+					sum = startWithC(number, sum);
 					break;
 				}
 			case 'D':
 				{
 					//rules check
-					sum += startWithD(number, sum);
+					sum = startWithD(number, sum);
 					break;
 				}
 			case 'M':
 				{
 					//rules check
-					sum += startWithM(number, sum);
+					sum = startWithM(number, sum);
 					break;
 				}
 			default:
@@ -105,8 +156,10 @@ public class Solution
 				return sum;
 			}
 		}
+		else
+			sum++;
 
-		return 0;
+		return sum;
 	}
 	private short startWithV(string number, short sum)
 	{
@@ -115,13 +168,13 @@ public class Solution
 		{
 			number = number[1..];
 			if (number[0] == 'I')
-				sum += startWithI(number, sum);
+				sum = startWithI(number, sum);
 			else
 				throw new Exception("Roman number of V can't be written 2 times consecutively");
 			return sum;
 		}
 		else
-			return (short)(sum + roman['V']);
+			return sum;
 	}
 	private short startWithX(string number, short sum)
 	{
@@ -141,6 +194,8 @@ public class Solution
 			//return sum;
 		}
 
+
+
 		if (!number.Contains('V') && !number.Contains('I'))
 		{
 			if (number.Length > 3)
@@ -153,20 +208,22 @@ public class Solution
 			sum += (short)(roman['X'] * number.IndexOf('I'));
 			number = number[1..];
 
-			sum += startWithI(number, sum);
+			sum = startWithI(number, sum);
 
 			return sum;
 		}
 		else
 		{
-			if ((number.IndexOf('V') + 1) != number.Length)
-				throw new Exception("Roman number of V can't be written 2 times consecutively.");
+			//if ((number.IndexOf('V') + 1) != number.Length)
+			//	throw new Exception("Roman number of V can't be written 2 times consecutively.");
 
-			var numberOfX = number.IndexOf('V');
+			var indexOfV = number.IndexOf('V');
+
+			var numberOfX = indexOfV;
 			sum += (short)(roman['X'] * numberOfX);
-			number = number[number.IndexOf('V')..];
+			number = number[indexOfV..];
 
-			sum += startWithV(number, sum);
+			sum = startWithV(number, sum);
 			return sum;
 
 			//var indexOfI = number.IndexOf('I');
@@ -186,15 +243,27 @@ public class Solution
 	}
 	private short startWithL(string number, short sum)
 	{
-		sum += roman['L'];
-		number = number[1..];
+		var indexOfLastL = (short)number.LastIndexOf('L');
+		if (indexOfLastL == 0)
+		{
+			sum += roman['L'];
+			number = number[1..];
+		}
+		else
+		{
+			sum += (short)((indexOfLastL + 1) * roman['L']);
+			number = number[(indexOfLastL + 1)..];
+		}
+
+		//sum += roman['L'];
+		//number = number[1..];
 
 		if (number[0] == 'X')
-			sum += startWithX(number, sum);
+			sum = startWithX(number, sum);
 		else if (number[0] == 'V')
-			sum += startWithV(number, sum);
+			sum = startWithV(number, sum);
 		else if (number[0] == 'I')
-			sum += startWithI(number, sum);
+			sum = startWithI(number, sum);
 		return sum;
 	}
 	private short startWithC(string number, short sum)
@@ -213,68 +282,106 @@ public class Solution
 			sum += (short)(roman['C'] * numberOfC);
 
 			number = number[1..];
-			sum += startWithI(number, sum);
+			sum = startWithI(number, sum);
 		}
 		else if (!number.Contains('L') && !number.Contains('X'))
 		{
 			numberOfC = (short)number.IndexOf('V');
 			sum += (short)(roman['C'] * numberOfC);
 
-			number = number[1..];
-			sum += startWithV(number, sum);
+			if (number[0] == 'C')
+				number = number[1..];
+
+			sum = startWithV(number, sum);
 		}
 		else if (!number.Contains('L'))
 		{
 			numberOfC = (short)number.IndexOf('X');
 			sum += (short)(roman['C'] * numberOfC);
 
-			number = number[1..];
-			sum += startWithX(number, sum);
+			if (number[0] == 'C')
+				number = number[1..];
+
+			sum = startWithX(number, sum);
 		}
 		else
 		{
-			numberOfC = (short)number.IndexOf('L');
-			sum += (short)(roman['C'] * numberOfC);
+			//numberOfC = (short)number.IndexOf('L');
+			//sum += (short)(roman['C'] * numberOfC);
 
-			number = number[1..];
-			sum += startWithL(number, sum);
+
+			//if (number[0] == 'C')
+			//	number = number[1..];
+
+			numberOfC = (short)number.LastIndexOf('C');
+			if (numberOfC == 0 || numberOfC == 1)
+			{
+				sum += (short)roman['C'];
+				number = number[1..];
+			}
+			else
+			{
+				sum += (short)((numberOfC + 1) * roman['C']);
+				number = number[(numberOfC + 1)..];
+			}
+
+			sum = startWithL(number, sum);
 		}
 		return sum;
 	}
 	private short startWithD(string number, short sum)
 	{
-		sum += roman['D'];
-		number = number[1..];
+		var indexOfLastD = number.LastIndexOf('D');
+		if (indexOfLastD == 0 || indexOfLastD == 1)
+		{
+			sum += (short)roman['D'];
+			number = number[1..];
+		}
+		else
+		{
+			sum += (short)((indexOfLastD + 1) * roman['D']);
+			number = number[(indexOfLastD + 1)..];
+		}
+
 
 		if (number[0] == 'C')
-			sum += startWithC(number, sum);
+			sum = startWithC(number, sum);
 		else if (number[0] == 'L')
-			sum += startWithL(number, sum);
+			sum = startWithL(number, sum);
 		else if (number[0] == 'X')
-			sum += startWithX(number, sum);
+			sum = startWithX(number, sum);
 		else if (number[0] == 'V')
-			sum += startWithV(number, sum);
+			sum = startWithV(number, sum);
 		else if (number[0] == 'I')
-			sum += startWithI(number, sum);
+			sum = startWithI(number, sum);
 		return sum;
 	}
 	private short startWithM(string number, short sum)
 	{
-		sum += roman['M'];
-		number = number[1..];
+		var indexOfLastM = number.LastIndexOf('M');
+		if (indexOfLastM == 0 || indexOfLastM == 1)
+		{
+			sum += (short)roman['M'];
+			number = number[1..];
+		}
+		else
+		{
+			sum += (short)((indexOfLastM + 1) * roman['M']);
+			number = number[(indexOfLastM + 1)..];
+		}
 
 		if (number[0] == 'D')
-			sum += startWithD(number, sum);
+			sum = startWithD(number, sum);
 		else if (number[0] == 'C')
-			sum += startWithC(number, sum);
+			sum = startWithC(number, sum);
 		else if (number[0] == 'L')
-			sum += startWithL(number, sum);
+			sum = startWithL(number, sum);
 		else if (number[0] == 'X')
-			sum += startWithX(number, sum);
+			sum = startWithX(number, sum);
 		else if (number[0] == 'V')
-			sum += startWithV(number, sum);
+			sum = startWithV(number, sum);
 		else if (number[0] == 'I')
-			sum += startWithI(number, sum);
+			sum = startWithI(number, sum);
 		return sum;
 	}
 }
