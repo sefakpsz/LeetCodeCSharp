@@ -1,62 +1,10 @@
-﻿//while (true)
-//{
-//    var roman = Console.ReadLine().ToUpper();
-//    Console.WriteLine(Solution.RomanToInteger(roman));
-//}
-var romans = Console.ReadLine();
+﻿var romans = Console.ReadLine();
+
+while (string.IsNullOrEmpty(romans))
+	romans = Console.ReadLine();
 var roman = romans.Split(" ");
 Console.WriteLine(new Solution().RomanToInteger(roman[0].Trim().ToUpper()));
 Console.ReadKey();
-
-/*
- 
-MCMXCV (1995) algorithm is incorrect for this number
-MMMCCCLXXXI (3381)
-CXCIII (193)
-MMMCXXXVII (3137) 
-MMMCCLXXXI (3281)
-MMMCDLXXVI (3476)
-MMMCCXVI (3216)
-MMMDCCXXXVI (3736)
-MLXXIX (1079)
-LXIX (69)
-MCLXX (1170)
-MCDLXXIX (1479)
-DCCLXXV (775)
-DCXLIV (644)
-MMMCCCXVI (3316)
-MMDCCCLXXXVIII (2888)
-DXL (540)
-MCDLXXXIX (1489)
-MCCCXXIV (1324)
-MMDCCXLVIII (2748)
-MMMDCCCLXXIX (3879)
-MMMLIV (3054)
-MMDXLIV (2544)
-MMDLXXV (2575)
-CLXXVIII (178)
-MMMDXCIII (3593)
-CCCLIII (353)
-LIX (59)
-MMCCCXXIV (2324)
-MMMDLIX (3559)
-MMMCMXXV (3925)
-XLIX (49)
-MXLVII (1047)
-MMCCVII (2207)
-MMMDCVIII (3608)
-MMMDCXXXII (3632)
-MMMCLXXXVIII (3188)
-MMCCCXCII (2392)
-MDCXLVIII (1648)
-MCCLVIII (1258)
-MDCCCLXIX (1869)
-MMMDXXVI (3526)
-MMMDXCVI (3596)
-MCCVIII (1208)
-
- */
-
 
 public class Solution
 {
@@ -101,19 +49,16 @@ public class Solution
 				}
 			case 'C':
 				{
-					//rules check
 					sum = startWithC(number, sum);
 					break;
 				}
 			case 'D':
 				{
-					//rules check
 					sum = startWithD(number, sum);
 					break;
 				}
 			case 'M':
 				{
-					//rules check
 					sum = startWithM(number, sum);
 					break;
 				}
@@ -177,46 +122,45 @@ public class Solution
 	}
 	private short startWithX(string number, short sum)
 	{
-		if (number[1] == 'L')
+		if (number.Length > 1)
 		{
-			if (number[2] == 'L')
-				throw new Exception("Roman number of L can't be written 2 times consecutively in this context.");
+			if (number[1] == 'L')
+			{
+				if (number.Length > 2)
+					if (number[2] == 'L')
+						throw new Exception("Roman number of L can't be written 2 times consecutively in this context.");
 
-			sum += 40;
-			number = number[2..];
-		}
-		else if (number[1] == 'C')
-		{
-			if (number[2] == 'C')
-				throw new Exception("Roman number of L can't be written 2 times consecutively in this context.");
+				sum += 40;
+				number = number[2..];
+			}
+			else if (number[1] == 'C')
+			{
+				if (number.Length > 2)
+					if (number[2] == 'C')
+						throw new Exception("Roman number of L can't be written 2 times consecutively in this context.");
 
-			sum += 90;
-			number = number[2..];
-		}
-		else
-		{
-			short numberOfX = (short)number.LastIndexOf('X');
-			if (numberOfX > 2)
-			{
-				sum += (short)((numberOfX - 1) * roman['X']);
-				number = number[(numberOfX - 1)..];
-			}
-			else if (numberOfX == 0 || numberOfX == 1)
-			{
-				sum += roman['X'];
-				number = number[1..];
-			}
-			else if (numberOfX == 2)
-			{
-				sum += (short)((numberOfX + 1) * roman['X']);
-				number = number[(numberOfX + 1)..];
+				sum += 90;
+				number = number[2..];
 			}
 		}
 
-		if (number[0] == 'V')
-			sum = startWithV(number, sum);
-		else if (number[0] == 'I')
-			sum = startWithI(number, sum);
+		short counter = 0;
+		foreach (var num in number)
+		{
+			if (num == 'X')
+				counter++;
+			else
+				break;
+		}
+
+		sum += (short)(counter * roman['X']);
+		number = number[counter..];
+
+		if (number.Length > 0)
+			if (number[0] == 'V')
+				sum = startWithV(number, sum);
+			else if (number[0] == 'I')
+				sum = startWithI(number, sum);
 
 		return sum;
 	}
@@ -234,55 +178,53 @@ public class Solution
 			number = number[(indexOfLastL + 1)..];
 		}
 
-		if (number[0] == 'X')
-			sum = startWithX(number, sum);
-		else if (number[0] == 'V')
-			sum = startWithV(number, sum);
-		else if (number[0] == 'I')
-			sum = startWithI(number, sum);
+		if (number.Length > 0)
+			if (number[0] == 'X')
+				sum = startWithX(number, sum);
+			else if (number[0] == 'V')
+				sum = startWithV(number, sum);
+			else if (number[0] == 'I')
+				sum = startWithI(number, sum);
 
 		return sum;
 	}
 	private short startWithC(string number, short sum)
 	{
-		if (number[1] == 'M')
+		if (number.Length > 1)
 		{
-			sum += 900;
-			number = number[2..];
-		}
-		else if (number[1] == 'D')
-		{
-			sum += 400;
-			number = number[2..];
-		}
-		else
-		{
-			short numberOfC = (short)number.LastIndexOf('C');
-			if (numberOfC > 2)
+			if (number[1] == 'M')
 			{
-				sum += (short)((numberOfC - 1) * roman['C']);
-				number = number[(numberOfC - 1)..];
+				sum += 900;
+				number = number[2..];
 			}
-			else if (numberOfC == 0 || numberOfC == 1)
+			else if (number[1] == 'D')
 			{
-				sum += (short)roman['C'];
-				number = number[1..];
-			}
-			else if (numberOfC == 2)
-			{
-				sum += (short)((numberOfC + 1) * roman['C']);
-				number = number[(numberOfC + 1)..];
+				sum += 400;
+				number = number[2..];
 			}
 		}
 
-		if (number[0] == 'L')
-			sum = startWithL(number, sum);
-		else if (number[0] == 'X')
-			sum = startWithX(number, sum);
-		else if (number[0] == 'V')
-			sum = startWithV(number, sum);
-		else if (number[0] == 'I')
-			sum = startWithI(number, sum);
+		short counter = 0;
+		foreach (var num in number)
+		{
+			if (num == 'C')
+				counter++;
+			else
+				break;
+		}
+
+		sum += (short)(counter * roman['C']);
+		number = number[counter..];
+
+		if (number.Length > 0)
+			if (number[0] == 'L')
+				sum = startWithL(number, sum);
+			else if (number[0] == 'X')
+				sum = startWithX(number, sum);
+			else if (number[0] == 'V')
+				sum = startWithV(number, sum);
+			else if (number[0] == 'I')
+				sum = startWithI(number, sum);
 
 		return sum;
 	}
@@ -300,50 +242,66 @@ public class Solution
 			number = number[(indexOfLastD + 1)..];
 		}
 
-
-		if (number[0] == 'C')
-			sum = startWithC(number, sum);
-		else if (number[0] == 'L')
-			sum = startWithL(number, sum);
-		else if (number[0] == 'X')
-			sum = startWithX(number, sum);
-		else if (number[0] == 'V')
-			sum = startWithV(number, sum);
-		else if (number[0] == 'I')
-			sum = startWithI(number, sum);
+		if (number.Length > 0)
+			if (number[0] == 'C')
+				sum = startWithC(number, sum);
+			else if (number[0] == 'L')
+				sum = startWithL(number, sum);
+			else if (number[0] == 'X')
+				sum = startWithX(number, sum);
+			else if (number[0] == 'V')
+				sum = startWithV(number, sum);
+			else if (number[0] == 'I')
+				sum = startWithI(number, sum);
 		return sum;
 	}
 	private short startWithM(string number, short sum)
 	{
-		var indexOfLastM = number.LastIndexOf('M');
-		if (indexOfLastM > 2)
+		short counter = 0;
+		foreach (var num in number)
 		{
-			sum += (short)((indexOfLastM - 1) * roman['M']);
-			number = number[(indexOfLastM - 1)..];
-		}
-		else if (indexOfLastM == 0 || indexOfLastM == 1)
-		{
-			sum += (short)roman['M'];
-			number = number[1..];
-		}
-		else
-		{
-			sum += (short)((indexOfLastM + 1) * roman['M']);
-			number = number[(indexOfLastM + 1)..];
+			if (num == 'M')
+				counter++;
+			else
+				break;
 		}
 
-		if (number[0] == 'D')
-			sum = startWithD(number, sum);
-		else if (number[0] == 'C')
-			sum = startWithC(number, sum);
-		else if (number[0] == 'L')
-			sum = startWithL(number, sum);
-		else if (number[0] == 'X')
-			sum = startWithX(number, sum);
-		else if (number[0] == 'V')
-			sum = startWithV(number, sum);
-		else if (number[0] == 'I')
-			sum = startWithI(number, sum);
+		sum += (short)(counter * roman['M']);
+		number = number[counter..];
+
+		if (number.Length > 0)
+			if (number[0] == 'D')
+				sum = startWithD(number, sum);
+			else if (number[0] == 'C')
+				sum = startWithC(number, sum);
+			else if (number[0] == 'L')
+				sum = startWithL(number, sum);
+			else if (number[0] == 'X')
+				sum = startWithX(number, sum);
+			else if (number[0] == 'V')
+				sum = startWithV(number, sum);
+			else if (number[0] == 'I')
+				sum = startWithI(number, sum);
 		return sum;
 	}
 }
+
+
+
+
+//short numberOfC = (short)number.LastIndexOf('C');
+//if (numberOfC > 2)
+//{
+//	sum += (short)((numberOfC - 1) * roman['C']);
+//	number = number[(numberOfC - 1)..];
+//}
+//else if (numberOfC == 0 || numberOfC == 1)
+//{
+//	sum += (short)roman['C'];
+//	number = number[1..];
+//}
+//else if (numberOfC == 2)
+//{
+//	sum += (short)((numberOfC + 1) * roman['C']);
+//	number = number[(numberOfC + 1)..];
+//}
