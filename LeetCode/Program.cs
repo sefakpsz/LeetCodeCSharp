@@ -31,19 +31,16 @@ public class Solution
 				}
 			case 'V':
 				{
-					//rules check
 					sum = startWithV(number, sum);
 					break;
 				}
 			case 'X':
 				{
-					//rules check
 					sum = startWithX(number, sum);
 					break;
 				}
 			case 'L':
 				{
-					//rules check
 					sum = startWithL(number, sum);
 					break;
 				}
@@ -126,19 +123,11 @@ public class Solution
 		{
 			if (number[1] == 'L')
 			{
-				if (number.Length > 2)
-					if (number[2] == 'L')
-						throw new Exception("Roman number of L can't be written 2 times consecutively in this context.");
-
 				sum += 40;
 				number = number[2..];
 			}
 			else if (number[1] == 'C')
 			{
-				if (number.Length > 2)
-					if (number[2] == 'C')
-						throw new Exception("Roman number of L can't be written 2 times consecutively in this context.");
-
 				sum += 90;
 				number = number[2..];
 			}
