@@ -274,23 +274,3 @@ public class Solution
 		return sum;
 	}
 }
-
-
-
-
-//short numberOfC = (short)number.LastIndexOf('C');
-//if (numberOfC > 2)
-//{
-//	sum += (short)((numberOfC - 1) * roman['C']);
-//	number = number[(numberOfC - 1)..];
-//}
-//else if (numberOfC == 0 || numberOfC == 1)
-//{
-//	sum += (short)roman['C'];
-//	number = number[1..];
-//}
-//else if (numberOfC == 2)
-//{
-//	sum += (short)((numberOfC + 1) * roman['C']);
-//	number = number[(numberOfC + 1)..];
-//}
