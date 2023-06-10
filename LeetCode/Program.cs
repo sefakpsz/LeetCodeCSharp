@@ -5,7 +5,7 @@ using System.Xml.Linq;
 var firstList = new ListNode(1, new ListNode(2, new ListNode(4)));
 var secondList = new ListNode(1, new ListNode(3, new ListNode(4)));
 
-var result = new Solution().MergeTwoLists(firstList, secondList);
+Console.WriteLine(new Solution().MergeTwoLists(firstList, secondList)); 
 
 //  Definition for singly-linked list.
 public class ListNode
@@ -23,60 +23,48 @@ public class Solution
 {
 	public ListNode MergeTwoLists(ListNode list1, ListNode list2)
 	{
-		var intList = new int[50];
-		var intList2 = new int[50];
-
-		var node = new ListNode();
-		node.val = list1.val;
-		node.next = new ListNode(list1.next.val);
+		var intList = new List<int>(15);
 
 		short counter = 0;
 		while (list1 != null)
 		{
+			intList.Add(list1.val);
 			list1 = list1.next;
-			
 			counter++;
 		}
 
-		counter = 0;
-
 		while (list2 != null)
 		{
-			node.val = list2.val;
-			node = node.next;
+			intList.Add(list2.val);
 			list2 = list2.next;
 			counter++;
 		}
 
-		while (node != null)
-		{
-			Console.WriteLine(node.val);
+		intList.Sort();
 
-		}
+		var node = new ListNode();
 
-		var mergedList = new int[100];
-
-		for (int i = 0; i < 100; i++)
-		{
-			mergedList[i] = intList[i];
-			mergedList[i + 1] = intList2[i];
-		}
-
-		var k = 0;
-		while (true)
-		{
-			Console.WriteLine(mergedList[k]);
-			k++;
-			if (k == mergedList.Length)
-				break;
-		}
-
-		//var listNode = new ListNode();
-		//while (true)
+		//for (int i = 0; i < intList.Count; i++)
 		//{
-
+		//	if (i == counter)
+		//		break;
+		//	node.val = intList[i];
+		//	node.next = new ListNode();
+		//	node = node.next;
 		//}
 
-		return null;
+		node.val = intList[0];
+		node.next = new ListNode(intList[1]);
+		node.next.next = new ListNode(intList[2]);
+		node.next.next.next = new ListNode(intList[3]);
+		node.next.next.next.next = new ListNode(intList[4]);
+		node.next.next.next.next.next = new ListNode(intList[5]);
+		//while (node!= null)
+		//{
+		//          Console.WriteLine(node.val);
+		//          node= node.next;
+		//}
+
+		return node;
 	}
 }
