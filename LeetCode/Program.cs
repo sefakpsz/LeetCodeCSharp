@@ -5,7 +5,7 @@ using System.Xml.Linq;
 var firstList = new ListNode(1, new ListNode(2, new ListNode(4)));
 var secondList = new ListNode(1, new ListNode(3, new ListNode(4)));
 
-Console.WriteLine(new Solution().MergeTwoLists(firstList, secondList)); 
+Console.WriteLine(new Solution().MergeTwoLists(firstList, secondList));
 
 //  Definition for singly-linked list.
 public class ListNode
@@ -21,9 +21,20 @@ public class ListNode
 
 public class Solution
 {
+	static void push(ref ListNode head_ref, int new_key, bool next)
+	{
+		var new_node = new ListNode();
+
+		new_node.val = new_key;
+
+		new_node.next = head_ref;
+
+		head_ref = new_node;
+	}
+
 	public ListNode MergeTwoLists(ListNode list1, ListNode list2)
 	{
-		var intList = new List<int>(15);
+		var intList = new List<int>();
 
 		short counter = 0;
 		while (list1 != null)
@@ -44,26 +55,16 @@ public class Solution
 
 		var node = new ListNode();
 
-		//for (int i = 0; i < intList.Count; i++)
-		//{
-		//	if (i == counter)
-		//		break;
-		//	node.val = intList[i];
-		//	node.next = new ListNode();
-		//	node = node.next;
-		//}
+		for (int i = intList.Count - 1; i >= 0; i--)
+		{
+			push(ref node, intList[i], i != 0);
+		}
 
-		node.val = intList[0];
-		node.next = new ListNode(intList[1]);
-		node.next.next = new ListNode(intList[2]);
-		node.next.next.next = new ListNode(intList[3]);
-		node.next.next.next.next = new ListNode(intList[4]);
-		node.next.next.next.next.next = new ListNode(intList[5]);
-		//while (node!= null)
-		//{
-		//          Console.WriteLine(node.val);
-		//          node= node.next;
-		//}
+		while (node != null)
+		{
+			Console.WriteLine(node.val);
+			node = node.next;
+		}
 
 		return node;
 	}
